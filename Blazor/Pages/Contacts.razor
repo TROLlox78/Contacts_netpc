@@ -1,14 +1,14 @@
 ﻿@page "/"   
-<-->sets this file as deafult page</-->
+
 @inherits ContractsBase
 
 
 @if (Contacts == null) {
-	<h3>Loading page...</h3>
+	<h3>Ładowanie kontaktów...</h3>
 }
 else
 {
-	<h3>Contacts</h3>
+	<h3>Kontakty</h3>
 	<div class="row mt-3">
 	@foreach(var i in Contacts)
 	{
@@ -20,7 +20,7 @@ else
                 <blockquote class="card-text">Kategoria: @i.CategoryName</blockquote>
                 @if (buttonTest)
                 {
-                    <button class="btn btn-primary" type="button">Detale</button>
+                    <button class="btn btn-primary" type="button">Więcej</button>
                 }
             </div>
         </div>

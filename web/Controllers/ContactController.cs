@@ -39,5 +39,13 @@ namespace Web.Controllers
             }
             return NotFound();
         }
+        [HttpPost("CreateContact")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public Task<ActionResult> CreateContact(Contact newContact)
+        {
+            
+            return CreatedAtAction();
+        }
     }
 }
