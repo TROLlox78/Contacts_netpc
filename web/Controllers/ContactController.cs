@@ -17,18 +17,18 @@ namespace Web.Controllers
         {
             this.contactRepository = contactRepository;
         }
-        [HttpGet]
+        [HttpGet("GetContactsSimple")] // if we decide an anoymous user may not see detailed information
         public async Task<ActionResult<IEnumerable<ContactSimpleViewDTO>>> GetContactsSimple()
         {
             var contacts = await contactRepository.GetContacts();
             if (contacts != null)
             {
                 return Ok(DTOconverter.ConvertTSimpleDTO(contacts));
-
+        
             }
             return NotFound();
         }
-        [HttpGet]
+        [HttpGet("GetContactsDetailed")]
         public async Task<ActionResult<IEnumerable<ContactDetailsDTO>>> GetContactsDetailed()
         {
             var contacts = await contactRepository.GetContacts();

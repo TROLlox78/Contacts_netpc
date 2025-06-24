@@ -1,6 +1,14 @@
-@web_HostAddress = http://localhost:5058
+@Web_HostAddress = https://localhost:7078
 
 GET {{web_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+GET {{Web_HostAddress}}/api/contact/GetContactsSimple
+
+###
+
+GET {{Web_HostAddress}}/api/contact/GetContactsDetailed
 
 ###

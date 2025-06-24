@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using Web.Data;
 using Web.Repository;
 
@@ -29,6 +30,14 @@ namespace Web
             {
                 app.MapOpenApi();
             }
+
+            // fix cross-origin request block
+            app.UseCors(policy =>  // origin is client address
+                policy.WithOrigins("http://localhost:7113", "https://localhost:7113")
+                .AllowAnyMethod()
+                .WithHeaders(HeaderNames.ContentType)
+                //.AllowAnyOrigin()
+                );
 
             app.UseHttpsRedirection();
 

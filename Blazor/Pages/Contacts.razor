@@ -1,0 +1,31 @@
+﻿@page "/"   
+<-->sets this file as deafult page</-->
+@inherits ContractsBase
+
+
+@if (Contacts == null) {
+	<h3>Loading page...</h3>
+}
+else
+{
+	<h3>Contacts</h3>
+	<div class="row mt-3">
+	@foreach(var i in Contacts)
+	{
+        <div class="card w-50">
+            <div class="card-body">
+                <h5 class="card-title">@i.FirstName @i.LastName</h5>
+                    <p  class="card-text">E-Mail: @i.Email <br />
+                        Telefon: @i.PhoneNumber</p>
+                <blockquote class="card-text">Kategoria: @i.CategoryName</blockquote>
+                @if (buttonTest)
+                {
+                    <button class="btn btn-primary" type="button">Detale</button>
+                }
+            </div>
+        </div>
+	}
+	</div>
+
+
+}
