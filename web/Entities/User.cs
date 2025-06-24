@@ -1,7 +1,9 @@
 ﻿namespace Web.Entities
 {
-    public class User
+    public class User // user for authorization
     {
-        // TODO: implement user for editing
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string PasswordHashed { get; set; }
     }
 }

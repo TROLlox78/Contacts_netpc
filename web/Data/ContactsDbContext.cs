@@ -13,7 +13,7 @@ namespace Web.Data
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<CategoryDict> CategoryDict { get; set; }
         public DbSet<SubCategoryDict> SubCategoryDict { get; set; }
-
+        public DbSet<User> Users { get; set; }
 
         // seeding the database with data
         protected override void OnModelCreating(ModelBuilder modelBuilder)

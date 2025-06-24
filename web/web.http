@@ -12,3 +12,28 @@ GET {{Web_HostAddress}}/api/contact/GetContactsSimple
 GET {{Web_HostAddress}}/api/contact/GetContactsDetailed
 
 ###
+
+POST {{Web_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "UserName":"george",
+  "Password":"bourge"
+}
+
+###
+# @name login
+POST {{Web_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "UserName":"alberto",
+  "Password":"ilovedoggy123"
+}
+
+###
+
+GET {{Web_HostAddress}}/api/auth
+Accept: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+###
