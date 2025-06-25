@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Shared.DTOs;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,6 +23,7 @@ namespace Web.Services
 
         public async Task<string?> Login(UserDTO request)
         {
+            // 
             // check by username because it can't repeat
             var user = await contactsDb.Users.FirstOrDefaultAsync(x => request.Username == x.Username);
             if (user == null) { return null; }
@@ -56,9 +55,10 @@ namespace Web.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                //new Claim(ClaimTypes.id, user.Id)
             };
-
+            // TODO: switch to an asymmetric key
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(configuration.GetValue<string>("Auth:Token")!)
                 );

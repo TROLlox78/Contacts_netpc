@@ -1,21 +1,27 @@
 using Blazor.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
-namespace Blazor
+namespace Blazor;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
-        {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
-            builder.RootComponents.Add<HeadOutlet>("head::after");
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.RootComponents.Add<App>("#app");
+        builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7078/") });
-            builder.Services.AddScoped<IContactService, ContactService>();
+        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7078/") });
+        builder.Services.AddScoped<IContactService, ContactService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddSingleton<AuthenticationStateProvider, AuthStateProvider>();
+        builder.Services.AddScoped<AuthHandler>();
 
-            await builder.Build().RunAsync();
-        }
+        builder.Services.AddAuthorizationCore();
+        builder.Services.AddCascadingAuthenticationState();
+
+        await builder.Build().RunAsync();
     }
 }

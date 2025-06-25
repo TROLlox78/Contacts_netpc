@@ -33,10 +33,10 @@ public class Program
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration.GetValue<string>("Auth:Issuer"),
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration.GetValue<string>("Auth:Audience"),
                     ValidateLifetime = true,
+                    ValidIssuer = builder.Configuration.GetValue<string>("Auth:Issuer"),
+                    ValidAudience = builder.Configuration.GetValue<string>("Auth:Audience"),
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Auth:Token")!)),
                 };
@@ -59,7 +59,7 @@ public class Program
         app.UseCors(policy =>  // origin is client address
             policy.WithOrigins("http://localhost:7113", "https://localhost:7113")
             .AllowAnyMethod()
-            .WithHeaders(HeaderNames.ContentType)
+            .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization)
             //.AllowAnyOrigin()
             );
 
@@ -67,6 +67,7 @@ public class Program
 
         app.UseAuthorization();
 
+        // here we would add antiforgery protection if it's needed
 
         app.MapControllers();
 

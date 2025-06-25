@@ -17,8 +17,8 @@ POST {{Web_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-  "UserName":"george",
-  "Password":"bourge"
+  "UserName":"aaaa",
+  "Password":"aaaa"
 }
 
 ###
@@ -27,8 +27,8 @@ POST {{Web_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-  "UserName":"alberto",
-  "Password":"ilovedoggy123"
+  "UserName":"g",
+  "Password":"g"
 }
 
 ###

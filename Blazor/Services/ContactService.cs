@@ -12,6 +12,11 @@ namespace Blazor.Services
             this.httpClient = httpClient;
         }
 
+        public async Task<HttpResponseMessage> GetAuth()
+        {
+            return await httpClient.GetAsync("api/auth");
+        }
+
         public async Task<IEnumerable<ContactDetailsDTO>> GetContacts()
         {
             return await httpClient.GetFromJsonAsync<IEnumerable<ContactDetailsDTO>>("api/contact/GetContactsDetailed");

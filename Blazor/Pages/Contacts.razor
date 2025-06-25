@@ -1,6 +1,31 @@
 ﻿@page "/"   
-
 @inherits ContractsBase
+
+<AuthorizeView>
+    <Authorized>
+        <p>Hello, @userDTO.Username! YOU ARE LOGGED IN</p>
+    </Authorized>
+    <NotAuthorized>
+       <p> You are not logged in!</p>
+        <br />
+        Username:
+        <br />
+        <input @bind="userDTO.Username" />
+        <br />
+        Password:
+        <br />
+        <input @bind="userDTO.Password" />
+        <br />
+        <button @onclick="Login">Login</button>
+        <button @onclick="Register">Register</button>
+        <br>
+    </NotAuthorized>
+    <Authorizing>
+        <p>Wait...</p>
+    </Authorizing>
+</AuthorizeView>
+
+
 
 
 @if (Contacts == null) {
@@ -20,7 +45,7 @@ else
                 <blockquote class="card-text">Kategoria: @i.CategoryName</blockquote>
                 @if (buttonTest)
                 {
-                    <button class="btn btn-primary" type="button">Więcej</button>
+                    <button @onclick="checkAuth" class="btn btn-primary" type="button">Więcej</button>
                 }
             </div>
         </div>
