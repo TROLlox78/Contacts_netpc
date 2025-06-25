@@ -3,50 +3,132 @@
 
 <AuthorizeView>
     <Authorized>
-        <p>Hello, @userDTO.Username! YOU ARE LOGGED IN</p>
+        <h5>Witaj, @userDTO.Username! YOU ARE LOGGED IN</h5>
+        <button @onclick="ToggleCreateField" class="btn btn-primary" type="button">Utwórz</button>
     </Authorized>
     <NotAuthorized>
        <p> You are not logged in!</p>
         <br />
-        Username:
-        <br />
+
+      
+        <label for="name">
+            Username:<br />
         <input @bind="userDTO.Username" />
+            
+        </label>
+        
         <br />
-        Password:
-        <br />
+        <label>
+            Password:<br />
         <input @bind="userDTO.Password" />
+        </label>
+
         <br />
         <button @onclick="Login">Login</button>
         <button @onclick="Register">Register</button>
-        <br>
+        <br/>
+        <br/>
     </NotAuthorized>
     <Authorizing>
         <p>Wait...</p>
     </Authorizing>
 </AuthorizeView>
 
+<!-- CREATION FORM-->
+@code {
+   
+    private int selectedCategoryId=0; // Variable to hold the selected category ID
+
+    private void OnCategorySelected()
+    {
+        // Handle the selected category ID (e.g., save it, display it, etc.)
+        Console.WriteLine($"Selected Category ID: {selectedCategoryId}");
+    }
+}
 
 
 
-@if (Contacts == null) {
+@if (showCreate)
+{
+    <EditForm FormName="Contact" Model="newContact" OnSubmit="Submit">
+        <label>FirstName</label> 
+        <InputText @bind-Value="newContact.FirstName" />
+        <br />
+        <label>LastName</label>
+        <InputText @bind-Value="newContact.LastName" />
+        <br />
+        <label>Email</label>
+        <InputText @bind-Value="newContact.Email" />
+        <br />
+        <label>PhoneNumber</label>
+        <InputText @bind-Value="newContact.PhoneNumber" />
+        <br />
+        <label>DateOfBirth</label>
+        <input type="date" @bind="newContact.DateOfBirth" />
+        <br />
+        <label>CategoryName</label>
+        <select @bind="newContact.CategoryId">
+
+            @foreach (var category in Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+        <br />
+        <label>SubCategoryName</label>
+         <InputText @bind-Value="newContact.SubCategory" />
+        
+        <button type="submit">Submit</button>
+    </EditForm>
+}
+
+@code {
+
+    private void Submit() { 
+        Console.WriteLine("{0}\n{1}\n{2}\n{3}\n{4}", newContact.FirstName,
+        newContact.LastName,newContact.Email,newContact.PhoneNumber, newContact.DateOfBirth);
+        Create(newContact);
+    }
+}
+
+
+@if (expandedContacts == null) {
 	<h3>Ładowanie kontaktów...</h3>
 }
 else
 {
 	<h3>Kontakty</h3>
 	<div class="row mt-3">
-	@foreach(var i in Contacts)
+    
+        
+
+    @foreach (var item in expandedContacts)
 	{
         <div class="card w-50">
             <div class="card-body">
-                <h5 class="card-title">@i.FirstName @i.LastName</h5>
-                    <p  class="card-text">E-Mail: @i.Email <br />
-                        Telefon: @i.PhoneNumber</p>
-                <blockquote class="card-text">Kategoria: @i.CategoryName</blockquote>
-                @if (buttonTest)
-                {
-                    <button @onclick="checkAuth" class="btn btn-primary" type="button">Więcej</button>
-                }
+                <h5 class="card-title">@item.Key.FirstName @item.Key.LastName</h5>
+                    <p  class="card-text">
+                        E-Mail: @item.Key.Email
+                        <br />
+                        Telefon: @item.Key.PhoneNumber
+                        <br/>
+                        Kategoria: @item.Key.CategoryName
+                        </p>
+                    
+
+                    <button @onclick="() => ToggleExpanded(item.Key)" class="btn btn-primary" type="button">
+                        @(item.Value ? "Schowaj" : "Więcej")
+                        </button>
+                    @if (item.Value) // if contact is expanded
+                    {
+                        <p  class="card-text">
+                            PodKategoria: @item.Key.SubCategory
+                            <br/>
+                            Urodzenie: @item.Key.DateOfBirth</p>
+                        <button onclick="Edit(item.Key)" class="btn btn-primary" type="button"> Edytuj </button>
+                        <button onclick="Delete(item.Key)" style="background:red;" class="btn btn-primary" type="button"> Usuń </button>
+
+                    }
             </div>
         </div>
 	}
