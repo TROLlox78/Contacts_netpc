@@ -44,17 +44,30 @@ public class DTOconverter
                 Name = category.Name,
             }).ToList();
     }
-    public static Contact ConvertDTO(ContactCreateDTO request)
+    public static Contact ConvertDTO(ContactCreateDTO contact)
     {
         return new Contact { 
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            Password = request.Password,  // TODO: hash the password
-            CategoryId = request.CategoryId,
-            SubCategory = request.SubCategory,
-            PhoneNumber = request.PhoneNumber,
-            DateOfBirth = request.DateOfBirth
+            FirstName = contact.FirstName,
+            LastName = contact.LastName,
+            Email = contact.Email,
+            Password = contact.Password,  // TODO: hash the password
+            CategoryId = contact.CategoryId,
+            SubCategory = contact.SubCategory,
+            PhoneNumber = contact.PhoneNumber,
+            DateOfBirth = contact.DateOfBirth
+        };
+    }
+    public static ContactDetailsDTO ConvertDTO(Contact contact, IEnumerable<CategoryDict> categories)
+    {
+        return new ContactDetailsDTO
+        {
+            FirstName = contact.FirstName,
+            LastName = contact.LastName,
+            Email = contact.Email,
+            CategoryName = categories.Where(x => contact.CategoryId == x.Id).First().Name,
+            SubCategory = contact.SubCategory,
+            PhoneNumber = contact.PhoneNumber,
+            DateOfBirth = contact.DateOfBirth
         };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Web.Converters;
@@ -40,6 +41,18 @@ public class ContactController : ControllerBase
         }
         return NotFound();
     }
+    [HttpGet("GetContact/{id:int}")]
+    public async Task<ActionResult<ContactDetailsDTO>> GetContact(int id)
+    {// this should be a join query to speed things up
+        var contacts = await contactRepository.GetContacts();
+        var contact = contacts.FirstOrDefault(x => x.Id == id);
+        var categories = await contactRepository.GetCategories();
+        if (contacts != null && categories != null && contact != null)
+        {
+            return Ok(DTOconverter.ConvertDTO(contact, categories));
+        }
+        return NotFound();
+    }
     [HttpGet("GetCategories")]
     public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
     {
@@ -59,8 +72,14 @@ public class ContactController : ControllerBase
         if (request== null) { return BadRequest("No data"); }
         var newContact = DTOconverter.ConvertDTO(request);
         var result = await contactRepository.AddContact(newContact);
-        // if result shit = badrequest else ret ok
-        
-        return Ok("spko");
+        if (result is null)
+        {
+            return Conflict("Email already exists");
+        }
+        else 
+        {
+            return Ok(result);
+        }
+        return StatusCode(500);
     }
 }

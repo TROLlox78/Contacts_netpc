@@ -7,6 +7,7 @@ public interface IContactService
     Task<IEnumerable<ContactDetailsDTO>> GetContacts();
     Task<HttpResponseMessage> GetAuth();
     Task<IEnumerable<CategoryDTO>> GetCategories();
-
+    Task<ContactDetailsDTO?> GetContact(int id);
+    Task<ContactDetailsDTO?> GetContact(string location);
     Task<HttpResponseMessage> PostContact(ContactCreateDTO contact);
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Web.Entities;
 using Web.Data;
+using Web.Converters;
 
 namespace Web.Repository;
 
@@ -22,10 +23,15 @@ public class ContactRepository : IContactRepository
     {
         return await dbContext.CategoryDict.ToListAsync();
     }
-    public async Task<IResult> AddContact(Contact contact) {
-        dbContext.Contacts.Add(contact); // TODO: CHECK UNIQUE EMAIL
+    public async Task<string?> AddContact(Contact contact) {
+        var contacts = await dbContext.Contacts.ToListAsync();
+        if (contacts.FirstOrDefault(x => x.Email==contact.Email) != null)
+        {
+            return null;
+        }
+        dbContext.Contacts.Add(contact); 
         await dbContext.SaveChangesAsync();
-        return TypedResults.Created(); // TODO: fill URI with contact id
+        return $"/api/contact/GetContact/{contact.Id}"; 
     }
 
     public async Task<IResult> DeleteContact(int contactId)
@@ -52,4 +58,5 @@ public class ContactRepository : IContactRepository
         await dbContext.SaveChangesAsync();
         return TypedResults.NoContent();
     }
+
 }

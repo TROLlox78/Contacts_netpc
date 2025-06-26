@@ -21,7 +21,14 @@ namespace Blazor.Services
         {
             return await httpClient.GetFromJsonAsync<IEnumerable<ContactDetailsDTO>>("api/contact/GetContactsDetailed");
         }
-        
+        public async Task<ContactDetailsDTO?> GetContact(int id)
+        {
+            return await httpClient.GetFromJsonAsync<ContactDetailsDTO>($"api/contact/GetContact/{id}");
+        }
+        public async Task<ContactDetailsDTO?> GetContact(string location)
+        {
+            return await httpClient.GetFromJsonAsync<ContactDetailsDTO>(location);
+        }
         public async Task<IEnumerable<CategoryDTO>> GetCategories()
         {
             return await httpClient.GetFromJsonAsync<IEnumerable<CategoryDTO>>("api/contact/GetCategories");

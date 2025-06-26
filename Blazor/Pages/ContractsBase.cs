@@ -42,9 +42,20 @@ public class ContractsBase : ComponentBase
     public void Delete(ContactDetailsDTO item)
     {
     }
-    public void Create(ContactCreateDTO item)
+    public async Task Create(ContactCreateDTO item)
     {
-        ContactService.PostContact(item);
+        var response = await ContactService.PostContact(item);
+        if (response.IsSuccessStatusCode) // we ask for the item to put in
+        {
+            Console.WriteLine(response);
+            var count = expandedContacts.Count;
+            string responseBody = await response.Content.ReadAsStringAsync();
+            var contact = await ContactService.GetContact(responseBody);
+            Console.WriteLine(responseBody);
+            expandedContacts.Add(contact, false);
+            Console.WriteLine("fetch {0} and {1}", count, expandedContacts.Count);
+            StateHasChanged();
+        }
     }
     public async Task Login()
     {
