@@ -37,3 +37,22 @@ GET {{Web_HostAddress}}/api/auth
 Accept: application/json
 Authorization: Bearer {{login.response.body.$.token}}
 ###
+
+@id=16
+DELETE {{Web_HostAddress}}/api/contact/DeleteContact/{{id}}
+Authorization: Bearer {{login.response.body.$.token}}
+
+###
+
+POST {{Web_HostAddress}}/api/contact/CreateContact
+Content-Type: application/json
+
+{
+  //ContactCreateDTO
+}
+
+###
+
+GET {{Web_HostAddress}}/api/contact/GetContact/{id:int}?id={{id}}
+
+###

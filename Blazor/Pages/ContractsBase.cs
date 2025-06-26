@@ -39,8 +39,11 @@ public class ContractsBase : ComponentBase
     public void Edit(ContactDetailsDTO item)
     {
     }
-    public void Delete(ContactDetailsDTO item)
+    public async Task Delete(ContactDetailsDTO item)
     {
+        var response = await ContactService.DeleteContact(item.Id);
+        if (response.IsSuccessStatusCode)
+        expandedContacts.Remove(item);
     }
     public async Task Create(ContactCreateDTO item)
     {

@@ -29,9 +29,10 @@ public class ContactRepository : IContactRepository
         {
             return null;
         }
-        dbContext.Contacts.Add(contact); 
+        var tracker = dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
-        return $"/api/contact/GetContact/{contact.Id}"; 
+        // return id of contact
+        return $"/api/contact/GetContact/{tracker.Entity.Id}"; 
     }
 
     public async Task<IResult> DeleteContact(int contactId)

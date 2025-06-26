@@ -57,8 +57,8 @@
         <input type="date" @bind="newContact.DateOfBirth" />
         <br />
         <label>CategoryName</label>
-        <select @bind="newContact.CategoryId">
-
+        <select  @bind="newContact.CategoryId">
+            <!-- TODO: switch to InputSelect, and set default value-->
             @foreach (var category in Categories)
             {
                 <option value="@category.Id">@category.Name</option>
@@ -114,9 +114,11 @@ else
                         <p  class="card-text">
                             PodKategoria: @item.Key.SubCategory
                             <br/>
+                            id: @item.Key.Id
+                            <br/>
                             Urodzenie: @item.Key.DateOfBirth</p>
                         <button onclick="Edit(item.Key)" class="btn btn-primary" type="button"> Edytuj </button>
-                        <button onclick="Delete(item.Key)" style="background:red;" class="btn btn-primary" type="button"> Usuń </button>
+                        <button @onclick="() => Delete(item.Key)" style="background:red;" class="btn btn-primary" type="button"> Usuń </button>
 
                     }
             </div>

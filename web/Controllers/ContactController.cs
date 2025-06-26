@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
 using Web.Converters;
 using Web.Entities;
@@ -82,4 +83,14 @@ public class ContactController : ControllerBase
         }
         return StatusCode(500);
     }
+    [Authorize]
+    [HttpDelete("DeleteContact/{id}")]
+    public async Task<ActionResult> DeleteContact(int id)
+    {
+        var result = await contactRepository.DeleteContact(id);
+        if (result is NotFound) { return NotFound(); }
+        return NoContent();
+
+    }
+
 }
