@@ -10,7 +10,7 @@ namespace Web.Repository
         Task<IEnumerable<CategoryDict>> GetCategories(); 
         Task<string?> AddContact(Contact contact);
         Task<IResult> DeleteContact(int contactId);
-        Task<IResult> UpdateContact(int id, Contact contact);
+        Task<string?> UpdateContact(int id, Contact contact);
 
     }
 }

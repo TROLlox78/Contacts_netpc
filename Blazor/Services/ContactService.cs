@@ -33,6 +33,10 @@ namespace Blazor.Services
         {
             return await httpClient.GetFromJsonAsync<IEnumerable<CategoryDTO>>("api/contact/GetCategories");
         }
+        public async Task<HttpResponseMessage> UpdateContact(int id, ContactCreateDTO contact)
+        {
+            return await httpClient.PutAsJsonAsync($"api/contact/UpdateContact/{id}", contact);
+        }
         public async Task<HttpResponseMessage> DeleteContact(int id)
         {
             return await httpClient.DeleteAsync($"api/contact/DeleteContact/{id}");

@@ -10,18 +10,7 @@ public class DTOconverter
     public static IEnumerable<ContactDetailsDTO> ConvertToDetailedDTO(IEnumerable<Contact> contacts,
         IEnumerable<CategoryDict> categories )
     {
-        return contacts.Select(contact => 
-            new ContactDetailsDTO
-            {
-                Id = contact.Id,
-                FirstName = contact.FirstName,
-                LastName = contact.LastName,
-                Email = contact.Email,
-                CategoryName = categories.Where(x => contact.CategoryId==x.Id).First().Name,
-                SubCategory = contact.SubCategory,
-                PhoneNumber = contact.PhoneNumber,
-                DateOfBirth = contact.DateOfBirth,
-            }).ToList();
+        return contacts.Select(contact => ConvertDTO(contact, categories)).ToList();
     }
 
     public static IEnumerable<ContactSimpleViewDTO> ConvertTSimpleDTO(IEnumerable<Contact> contacts)
@@ -61,9 +50,11 @@ public class DTOconverter
     {
         return new ContactDetailsDTO
         {
+            Id = contact.Id,
             FirstName = contact.FirstName,
             LastName = contact.LastName,
             Email = contact.Email,
+            CategoryId = contact.CategoryId, // necessary for editing
             CategoryName = categories.Where(x => contact.CategoryId == x.Id).First().Name,
             SubCategory = contact.SubCategory,
             PhoneNumber = contact.PhoneNumber,

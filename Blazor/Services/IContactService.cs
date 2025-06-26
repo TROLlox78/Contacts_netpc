@@ -11,4 +11,5 @@ public interface IContactService
     Task<ContactDetailsDTO?> GetContact(string location);
     Task<HttpResponseMessage> PostContact(ContactCreateDTO contact);
     Task<HttpResponseMessage> DeleteContact(int id);
+    Task<HttpResponseMessage> UpdateContact(int id, ContactCreateDTO contact);
 }

@@ -56,3 +56,19 @@ Content-Type: application/json
 GET {{Web_HostAddress}}/api/contact/GetContact/{id:int}?id={{id}}
 
 ###
+@id=9
+PUT {{Web_HostAddress}}/api/contact/UpdateContact/{{id}}
+Content-Type: application/json
+
+{
+  "FirstName":"Mike",
+  "LastName":"Like",
+  "Email":"spike@nike.com",
+  "Password":"mikielikenike",
+  "CategoryId ":"1",
+  "SubCategory":"el-diablo",
+  "PhoneNumber":"132567926",
+  "DateOfBirth":"1/1/2000"
+}
+
+###

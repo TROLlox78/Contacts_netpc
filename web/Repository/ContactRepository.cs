@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Web.Entities;
+using System.Diagnostics;
 using Web.Data;
-using Web.Converters;
+using Web.Entities;
 
 namespace Web.Repository;
 
@@ -44,10 +44,10 @@ public class ContactRepository : IContactRepository
         return TypedResults.NoContent();
     }
 
-    public async Task<IResult> UpdateContact(int id, Contact newContact)
+    public async Task<string?> UpdateContact(int id, Contact newContact)
     {
         var oldContact = await dbContext.Contacts.FindAsync(id);
-        if (oldContact is null) return TypedResults.NotFound();
+        if (oldContact is null) return null;
         oldContact.FirstName   = newContact.FirstName;
         oldContact.LastName    = newContact.LastName;
         oldContact.Email       = newContact.Email;
@@ -57,7 +57,7 @@ public class ContactRepository : IContactRepository
         oldContact.PhoneNumber = newContact.PhoneNumber;
         oldContact.DateOfBirth = newContact.DateOfBirth;
         await dbContext.SaveChangesAsync();
-        return TypedResults.NoContent();
+        return $"/api/contact/GetContact/{id}";
     }
 
 }

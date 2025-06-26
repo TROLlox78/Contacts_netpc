@@ -72,14 +72,14 @@ public class ContactController : ControllerBase
         
         if (request== null) { return BadRequest("No data"); }
         var newContact = DTOconverter.ConvertDTO(request);
-        var result = await contactRepository.AddContact(newContact);
-        if (result is null)
+        var response = await contactRepository.AddContact(newContact);
+        if (response is null)
         {
             return Conflict("Email already exists");
         }
         else 
         {
-            return Ok(result);
+            return Ok(response);
         }
         return StatusCode(500);
     }
@@ -92,5 +92,21 @@ public class ContactController : ControllerBase
         return NoContent();
 
     }
+    [Authorize]
+    [HttpPut("UpdateContact/{id}")]
+    public async Task<IActionResult> UpdateContact(int id, [FromBody] ContactCreateDTO updatedContact)
+    {
+        if (updatedContact == null || id != updatedContact.Id)
+        {
+            return BadRequest("Invalid data" );
+        }
+        var contact = DTOconverter.ConvertDTO(updatedContact);
+        var response = await contactRepository.UpdateContact(id, contact);
 
+        if (response is null)
+        {
+            return NotFound("Contact not found");
+        }
+        return Ok(response);
+    }
 }

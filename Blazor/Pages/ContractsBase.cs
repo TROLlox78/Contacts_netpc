@@ -8,11 +8,13 @@ namespace Blazor.Pages;
 public class ContractsBase : ComponentBase
 {
     public bool showCreate = false;
-    // holds expanded/contracted state, I don't know how to do UI well :(
-    public Dictionary<ContactDetailsDTO, bool> expandedContacts = new();
+    // holds expanded/contracted/editing state, I don't know how to do UI well :(
+    public Dictionary<ContactDetailsDTO, ContactState> expandedContacts = new();
    
     public ContactCreateDTO newContact = new();
     public UserDTO userDTO = new();
+    public ContactCreateDTO editing = new();
+    public int editingId = -1;
     
     [Inject]
     public IContactService ContactService { get; set; }
@@ -25,7 +27,7 @@ public class ContractsBase : ComponentBase
         Contacts = await ContactService.GetContacts();
         Categories = await ContactService.GetCategories();
         foreach (var contact in Contacts) {
-            expandedContacts.Add(contact, false);
+            expandedContacts.Add(contact, new());
         }
     }
     public void ToggleCreateField()
@@ -34,30 +36,44 @@ public class ContractsBase : ComponentBase
     }
     public void ToggleExpanded(ContactDetailsDTO item)
     {
-        expandedContacts[item] = !expandedContacts[item];
+        expandedContacts[item].expanded = !expandedContacts[item].expanded;
     }
-    public void Edit(ContactDetailsDTO item)
+    public void ToggleEdit(KeyValuePair<ContactDetailsDTO, ContactState> item)
     {
+        item.Value.editing = !item.Value.editing;
+        item.Value.Set(item.Key);
+    }
+
+    public async void Edit(ContactCreateDTO item)
+    {
+        var response = await ContactService.UpdateContact(item.Id, item);
+        if (response.IsSuccessStatusCode)
+        {
+            var Destroy = expandedContacts.FirstOrDefault(x=>x.Key.Id == item.Id).Key;
+            expandedContacts.Remove(Destroy);
+
+            UpdateContactUI(response);
+        }
     }
     public async Task Delete(ContactDetailsDTO item)
     {
         var response = await ContactService.DeleteContact(item.Id);
-        if (response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)  
         expandedContacts.Remove(item);
+    }
+    public async void UpdateContactUI(HttpResponseMessage response)
+    {
+        string responseBody = await response.Content.ReadAsStringAsync();
+        var contact = await ContactService.GetContact(responseBody);
+        expandedContacts.Add(contact, new());
+        StateHasChanged();
     }
     public async Task Create(ContactCreateDTO item)
     {
         var response = await ContactService.PostContact(item);
         if (response.IsSuccessStatusCode) // we ask for the item to put in
         {
-            Console.WriteLine(response);
-            var count = expandedContacts.Count;
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var contact = await ContactService.GetContact(responseBody);
-            Console.WriteLine(responseBody);
-            expandedContacts.Add(contact, false);
-            Console.WriteLine("fetch {0} and {1}", count, expandedContacts.Count);
-            StateHasChanged();
+            UpdateContactUI(response);
         }
     }
     public async Task Login()
@@ -72,5 +88,22 @@ public class ContractsBase : ComponentBase
     {
         var r = await ContactService.GetAuth();
         Console.WriteLine(r);
+    }
+    public class ContactState
+    {
+        public bool expanded = false;
+        public bool editing = false;
+        public ContactCreateDTO editingModel = new();
+        public void Set(ContactDetailsDTO item)
+        {
+            editingModel.Id = item.Id;
+            editingModel.FirstName = item.FirstName;
+            editingModel.LastName = item.LastName;
+            editingModel.PhoneNumber = item.PhoneNumber;
+            editingModel.DateOfBirth = item.DateOfBirth;
+            editingModel.CategoryId = item.CategoryId;
+            editingModel.SubCategory = item.SubCategory;
+            editingModel.Email = item.Email;
+        }
     }
 }

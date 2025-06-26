@@ -9,8 +9,6 @@
     <NotAuthorized>
        <p> You are not logged in!</p>
         <br />
-
-      
         <label for="name">
             Username:<br />
         <input @bind="userDTO.Username" />
@@ -58,7 +56,7 @@
         <br />
         <label>CategoryName</label>
         <select  @bind="newContact.CategoryId">
-            <!-- TODO: switch to InputSelect, and set default value-->
+            <!-- TODO: switch to InputSelect-->
             @foreach (var category in Categories)
             {
                 <option value="@category.Id">@category.Name</option>
@@ -72,12 +70,12 @@
     </EditForm>
 }
 
-@code {
+@code { // quick handler function
 
-    private void Submit() { 
+    private async void Submit() { 
         Console.WriteLine("{0}\n{1}\n{2}\n{3}\n{4}", newContact.FirstName,
         newContact.LastName,newContact.Email,newContact.PhoneNumber, newContact.DateOfBirth);
-        Create(newContact);
+        await Create(newContact);
     }
 }
 
@@ -96,6 +94,8 @@ else
 	{
         <div class="card w-50">
             <div class="card-body">
+                    @if (!item.Value.expanded) // if contact is not expanded
+                    {
                 <h5 class="card-title">@item.Key.FirstName @item.Key.LastName</h5>
                     <p  class="card-text">
                         E-Mail: @item.Key.Email
@@ -104,22 +104,75 @@ else
                         <br/>
                         Kategoria: @item.Key.CategoryName
                         </p>
-                    
 
                     <button @onclick="() => ToggleExpanded(item.Key)" class="btn btn-primary" type="button">
-                        @(item.Value ? "Schowaj" : "Więcej")
+                        @(item.Value.expanded ? "Schowaj" : "Więcej")
                         </button>
-                    @if (item.Value) // if contact is expanded
-                    {
+                    
+
+                    }
+                    else // contact expanded, either editing or just plain text
+                    {  
+                        @if (item.Value.editing){
+
+                            <EditForm Model="item.Value.editingModel" >
+                                <label>Imię</label>
+                                <InputText @bind-Value="item.Value.editingModel.FirstName" />
+                                <br />
+                                <label>Nazwisko</label>
+                                <InputText @bind-Value="item.Value.editingModel.LastName" />
+                                <br />
+                                <label>Email</label>
+                                <InputText @bind-Value="item.Value.editingModel.Email" />
+                                <br />
+                                <label>Numer Telefonu</label>
+                                <InputText @bind-Value="item.Value.editingModel.PhoneNumber" />
+                                <br />
+                                <label>Data narodzin</label>
+                                <input type="date" @bind="item.Value.editingModel.DateOfBirth" />
+                                <br />
+                                <label>Kategoria</label>
+                                <select @bind="item.Value.editingModel.CategoryId">
+                                    <!-- TODO: switch to InputSelect-->
+                                    @foreach (var category in Categories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                </select>
+                                <br />
+                                <label>PodKategoria</label>
+                                <InputText @bind-Value="item.Value.editingModel.SubCategory" />
+                           </EditForm>
+                           
+                            <button @onclick="() => ToggleEdit(item)" class="btn btn-primary" type="button"> Cofnij </button>
+                            <button @onclick="() => Edit(item.Value.editingModel)" class="btn btn-primary" type="button"> Zapisz </button>
+                            <button @onclick="() => Delete(item.Key)" style="background:red;" class="btn btn-primary" type="button"> Usuń </button>
+
+                        }else{
+                        <h5 class="card-title">@item.Key.FirstName @item.Key.LastName</h5>
+                        <p class="card-text">
+                            E-Mail: @item.Key.Email
+                            <br />
+                            Telefon: @item.Key.PhoneNumber
+                            <br />
+                            Kategoria: @item.Key.CategoryName
+                        </p>
                         <p  class="card-text">
                             PodKategoria: @item.Key.SubCategory
                             <br/>
                             id: @item.Key.Id
                             <br/>
                             Urodzenie: @item.Key.DateOfBirth</p>
-                        <button onclick="Edit(item.Key)" class="btn btn-primary" type="button"> Edytuj </button>
+                        <button @onclick="() => ToggleExpanded(item.Key)" class="btn btn-primary" type="button">
+                            @(item.Value.expanded ? "Schowaj" : "Więcej")
+                        </button>
+                        <AuthorizeView >
+                               <Authorized>
+                        <button @onclick="() => ToggleEdit(item)" class="btn btn-primary" type="button"> Edytuj </button>
                         <button @onclick="() => Delete(item.Key)" style="background:red;" class="btn btn-primary" type="button"> Usuń </button>
-
+                                </Authorized>
+                            </AuthorizeView>
+                        }
                     }
             </div>
         </div>
