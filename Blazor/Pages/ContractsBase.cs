@@ -80,9 +80,9 @@ public class ContractsBase : ComponentBase
     {
         await AuthHandler.HandleLogin(userDTO);
     }
-    public void Register()
+    public async void Register()
     {
-        AuthHandler.HandleRegister(); // todo
+        await AuthHandler.HandleRegister(userDTO); // todo
     }
     public async Task checkAuth()
     {

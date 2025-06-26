@@ -34,8 +34,8 @@ public class AuthHandler
         ((AuthStateProvider)authenticationStateProvider)
             .AuthenticateUser(user);
     }
-    public void HandleRegister()
+    public async Task HandleRegister(UserDTO request)
     {
-       // TODO: implement
+        await authService.Register(request);
     }
 }

@@ -17,8 +17,8 @@ POST {{Web_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-  "UserName":"aaaa",
-  "Password":"aaaa"
+  "UserName":"test",
+  "Password":"test"
 }
 
 ###

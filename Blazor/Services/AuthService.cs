@@ -18,6 +18,11 @@ namespace Blazor.Services
             return await httpClient.PostAsJsonAsync<UserDTO>("/api/auth/login", userDTO);
         }
 
+        public async Task<HttpResponseMessage?> Register(UserDTO userDTO)
+        {
+            return await httpClient.PostAsJsonAsync<UserDTO>("/api/auth/register", userDTO);
+        }
+
         public void StoreToken(string token)
         {
             // I choose not to store it in localstorage

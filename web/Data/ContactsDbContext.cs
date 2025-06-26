@@ -97,11 +97,12 @@ namespace Web.Data
             });
             #endregion
             #region User
-            //modelBuilder.Entity<User>().HasData(new User
-            //{
-            //    Id = 4,
-            //    Name = "pracownik"
-            //});
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = 1,
+                Username= "aaaa",
+                PasswordHashed = "AQAAAAIAAYagAAAAEM/ATZX4uplyyeW+2IgysvsVp5Fw7wg4WLaOtcVpeiWl2FhTR1er8HKeqdYY+NpBcw==",
+            });
             #endregion
         }
 
